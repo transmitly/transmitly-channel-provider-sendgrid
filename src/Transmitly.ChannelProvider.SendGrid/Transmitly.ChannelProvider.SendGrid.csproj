@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT'">net48;net471</TargetFrameworks>
+		<TargetFrameworks>$(TargetFrameworks);netstandard2.0;net6.0</TargetFrameworks>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<IsPackable>true</IsPackable>
+		<AssemblyVersion>0.0.1</AssemblyVersion>
+		<AssemblyFileVersion>0.0.1</AssemblyFileVersion>
+		<PackageId>Transmitly.ChannelProvider.SendGrid</PackageId>
+		<Product>Transmitly</Product>
+		<ProductName>Transmit.ly</ProductName>
+		<Company>Code Impressions</Company>
+		<Title>Transmit.ly SendGrid Channel Provider</Title>
+		<Description>A channel provider for the Transmitly communications library.</Description>
+		<Copyright>Copyright © (c) Code Impressions, LLC</Copyright>
+		<Authors>Code Impressions</Authors>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageIcon>icon-dark.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/transmitly/transmitly-channel-provider-sendgrid.git</RepositoryUrl>
+		<PackageTags>email,sendgrid;channel provider; transmitly</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\..\..\transmitly-channel-provider-firebase\assets\icon-dark.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\..\..\transmitly-channel-provider-firebase\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="SendGrid" Version="9.28.1" />
+		<PackageReference Include="Transmitly" Version="0.1.0-*" />
+	</ItemGroup>
+</Project>
+
