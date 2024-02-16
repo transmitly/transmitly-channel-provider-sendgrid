@@ -1,6 +1,6 @@
 # Transmitly.ChannelProvider.SendGrid
 
-A [Transmitly](https://github.com/transmitly/transmitly) channel provider that enables sending Email communications with SendGrid
+A [Transmitly](https://github.com/transmitly/transmitly) channel provider that enables sending Email communications with [SendGrid](https://sendgrid.com)
 
 ### Getting started
 
