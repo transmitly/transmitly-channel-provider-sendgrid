@@ -1,29 +1,25 @@
-# Transmitly.ChannelProvider.MailKit
+# Transmitly.ChannelProvider.SendGrid
 
-A [Transmitly](https://github.com/transmitly/transmitly) channel provider that enables sending Email communications through SMTP using MailKit
+A [Transmitly](https://github.com/transmitly/transmitly) channel provider that enables sending Email communications with SendGrid
 
 ### Getting started
 
-To use the MailKit channel provider, first install the [NuGet package](https://nuget.org/packages/transmitly.channelprovider.mailkit):
+To use the SendGrid channel provider, first install the [NuGet package](https://nuget.org/packages/transmitly.channelprovider.sendgrid):
 
 ```shell
-dotnet add package Transmitly.ChannelProvider.MailKit
+dotnet add package Transmitly.ChannelProvider.SendGrid
 ```
 
-Then add the channel provider using `AddMailKitSupport()`:
+Then add the channel provider using `AddSendGridSupport()`:
 
 ```csharp
 using Transmitly;
 ...
 var communicationClient = new CommunicationsClientBuilder()
-	.AddMailKitSupport(options =>
+	.AddSendGridSupport(options =>
 	{
-		options.Host = "smtp.test.com";
-		options.Port = 587;
-		options.UseSsl = true;
-		options.UserName = "Test";
-		options.Password = "Password";
-	});
+		options.ApiKey = "12354";
+	})
 ```
 * See the [Transmitly](https://github.com/transmitly/transmitly) project for more details on what a channel provider is and how it can be configured.
 
