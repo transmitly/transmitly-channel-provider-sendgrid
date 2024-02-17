@@ -24,12 +24,13 @@ namespace Transmitly
 	public static class SendGridChannelProviderExtensions
 	{
 		private const string SendGridId = "SendGrid";
+		private const string DefaultProviderId = "Default";
 
-		public static string SendGrid(this ChannelProviders channelProviders, string? providerId = "Default")
+		public static string SendGrid(this ChannelProviders channelProviders, string? providerId = DefaultProviderId)
 		{
 			Guard.AgainstNull(channelProviders);
-			Guard.AgainstNullOrWhiteSpace(providerId);
-			return $"{SendGridId}.{providerId}";
+
+			return $"{SendGridId}.{(!string.IsNullOrWhiteSpace(providerId) ? providerId : DefaultProviderId)}";
 		}
 
 		public static IPipelineChannelConfiguration AddSendGridTemplateEmail(this IPipelineChannelConfiguration pipelineChannelConfiguration, IAudienceAddress fromAddress, string templateId, Action<ISendGridEmailChannel> emailChannelConfiguration, params string[]? allowedChannelProviders)
@@ -55,12 +56,12 @@ namespace Transmitly
 			return pipelineChannelConfiguration;
 		}
 
-		public static CommunicationsClientBuilder AddSendGridSupport(this CommunicationsClientBuilder channelProviderConfiguration, Action<SendGridClientOptions> options)
+		public static CommunicationsClientBuilder AddSendGridSupport(this CommunicationsClientBuilder channelProviderConfiguration, Action<SendGridClientOptions> options, string? providerId = null)
 		{
 			var opts = new SendGridClientOptions();
 			options(opts);
-			channelProviderConfiguration.AddChannelProvider<SendGridMessage>(Id.ChannelProvider.SendGrid(), new SendGridChannelProviderClient(opts), Id.Channel.Email(nameof(SendGridMessage)));
-			channelProviderConfiguration.AddChannelProvider<IEmail>(Id.ChannelProvider.SendGrid(), new SendGridChannelProviderClient(opts), Id.Channel.Email());
+			channelProviderConfiguration.AddChannelProvider<SendGridMessage>(Id.ChannelProvider.SendGrid(providerId), new SendGridChannelProviderClient(opts), Id.Channel.Email(nameof(SendGridMessage)));
+			channelProviderConfiguration.AddChannelProvider<IEmail>(Id.ChannelProvider.SendGrid(providerId), new SendGridChannelProviderClient(opts), Id.Channel.Email());
 			return channelProviderConfiguration;
 		}
 	}

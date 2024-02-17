@@ -20,7 +20,7 @@
 		<PackageIcon>icon-dark.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/transmitly/transmitly-channel-provider-sendgrid.git</RepositoryUrl>
-		<PackageTags>email,sendgrid;channel provider; transmitly</PackageTags>
+		<PackageTags>email;sendgrid;channel provider; transmitly</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
