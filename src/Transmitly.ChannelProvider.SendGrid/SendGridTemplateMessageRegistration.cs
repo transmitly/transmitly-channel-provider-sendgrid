@@ -18,11 +18,11 @@ using Transmitly.Template.Configuration;
 
 namespace Transmitly.SendGrid
 {
-	internal class SendGridTemplateRegistration : IContentTemplateRegistration
+	internal class SendGridTemplateMessageRegistration : IContentTemplateRegistration
 	{
 		private readonly string _templateId;
 
-		public SendGridTemplateRegistration(string templateId, CultureInfo cultureInfo)
+		public SendGridTemplateMessageRegistration(string templateId, CultureInfo cultureInfo)
 		{
 			if (string.IsNullOrEmpty(templateId))
 			{
@@ -33,8 +33,8 @@ namespace Transmitly.SendGrid
 			CultureInfo = cultureInfo;
 		}
 		public CultureInfo CultureInfo { get; }
-
-		public Task<string?> GetContentAsync()
+		
+		public Task<string?> GetContentAsync(IDispatchCommunicationContext context)
 		{
 			return Task.FromResult<string?>(_templateId);
 		}

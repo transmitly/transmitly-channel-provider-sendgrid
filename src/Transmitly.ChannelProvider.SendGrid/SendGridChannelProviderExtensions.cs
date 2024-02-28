@@ -60,8 +60,8 @@ namespace Transmitly
 		{
 			var opts = new SendGridClientOptions();
 			options(opts);
-			channelProviderConfiguration.AddChannelProvider<SendGridMessage>(Id.ChannelProvider.SendGrid(providerId), new SendGridChannelProviderClient(opts), Id.Channel.Email(nameof(SendGridMessage)));
-			channelProviderConfiguration.AddChannelProvider<IEmail>(Id.ChannelProvider.SendGrid(providerId), new SendGridChannelProviderClient(opts), Id.Channel.Email());
+			channelProviderConfiguration.AddChannelProvider<SendGridMessageChannelProviderClient, SendGridMessage>(Id.ChannelProvider.SendGrid(providerId), opts, Id.Channel.Email());
+			channelProviderConfiguration.AddChannelProvider<EmailChannelProviderClient, IEmail>(Id.ChannelProvider.SendGrid(providerId), opts, Id.Channel.Email());
 			return channelProviderConfiguration;
 		}
 	}

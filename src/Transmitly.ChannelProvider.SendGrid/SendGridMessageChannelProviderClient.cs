@@ -16,17 +16,16 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Transmitly.ChannelProvider;
 
 namespace Transmitly.SendGrid
 {
-	internal class SendGridChannelProviderClient : ChannelProviderClient<IEmail, SendGridMessage>
+	sealed class SendGridMessageChannelProviderClient : ChannelProviderClient<SendGridMessage>
 	{
 		private readonly string _apiKey;
-		public SendGridChannelProviderClient(SendGridClientOptions sendGridClientOptions)
+		public SendGridMessageChannelProviderClient(SendGridClientOptions sendGridClientOptions)
 		{
 			if (sendGridClientOptions is null)
 			{
@@ -35,29 +34,12 @@ namespace Transmitly.SendGrid
 
 			_apiKey = sendGridClientOptions.ApiKey;
 		}
-
+		
 		public override async Task<IReadOnlyCollection<IDispatchResult?>> DispatchAsync(SendGridMessage communication, IDispatchCommunicationContext communicationContext, CancellationToken cancellationToken)
 		{
 			var client = new SendGridClient(_apiKey);
 
 			var res = await client.SendEmailAsync(communication, cancellationToken).ConfigureAwait(false);
-			return [new SendGridResult { IsDelivered = res.IsSuccessStatusCode, DispatchStatus = res.IsSuccessStatusCode ? DispatchStatus.Dispatched : DispatchStatus.Error }];
-		}
-
-		public override async Task<IReadOnlyCollection<IDispatchResult?>> DispatchAsync(IEmail communication, IDispatchCommunicationContext communicationContext, CancellationToken cancellationToken)
-		{
-			Guard.AgainstNull(communication);
-			var client = new SendGridClient(_apiKey);
-
-			var email = communication;
-			var msg = MailHelper.CreateSingleEmailToMultipleRecipients(
-				new EmailAddress(communication.From.Value, communication.From.Display),
-				communication.To!.Select(m => new EmailAddress(m.Value, m.Display)).ToList(),
-				email.Subject,
-				email.TextBody,
-				email.HtmlBody);
-
-			var res = await client.SendEmailAsync(msg, cancellationToken).ConfigureAwait(false);
 			return [new SendGridResult { IsDelivered = res.IsSuccessStatusCode, DispatchStatus = res.IsSuccessStatusCode ? DispatchStatus.Dispatched : DispatchStatus.Error }];
 		}
 	}

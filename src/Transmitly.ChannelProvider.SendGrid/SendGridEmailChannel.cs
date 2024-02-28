@@ -39,6 +39,8 @@ namespace Transmitly.SendGrid
 
 		public IEnumerable<string> AllowedChannelProviderIds => allowedChannelProviders ?? [];
 
+		public Type CommunicationType => typeof(SendGridMessage);
+
 		public async Task<object> GenerateCommunicationAsync(IDispatchCommunicationContext communicationContext)
 		{
 			var subject = await Subject.RenderAsync(communicationContext, false);
