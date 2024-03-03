@@ -24,13 +24,11 @@ namespace Transmitly
 	public static class SendGridChannelProviderExtensions
 	{
 		private const string SendGridId = "SendGrid";
-		private const string DefaultProviderId = "Default";
 
-		public static string SendGrid(this ChannelProviders channelProviders, string? providerId = DefaultProviderId)
+		public static string SendGrid(this ChannelProviders channelProviders, string? providerId = null)
 		{
 			Guard.AgainstNull(channelProviders);
-
-			return $"{SendGridId}.{(!string.IsNullOrWhiteSpace(providerId) ? providerId : DefaultProviderId)}";
+			return channelProviders.GetId(SendGridId, providerId);
 		}
 
 		public static IPipelineChannelConfiguration AddSendGridTemplateEmail(this IPipelineChannelConfiguration pipelineChannelConfiguration, IAudienceAddress fromAddress, string templateId, Action<ISendGridEmailChannel> emailChannelConfiguration, params string[]? allowedChannelProviders)
