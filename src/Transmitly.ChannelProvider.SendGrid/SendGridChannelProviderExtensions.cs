@@ -25,34 +25,39 @@ namespace Transmitly
 	{
 		private const string SendGridId = "SendGrid";
 
+		public static SendGridExtendedEmailProperties SendGrid(this IEmailChannel email)
+		{
+			return new SendGridExtendedEmailProperties(email);
+		}
+
 		public static string SendGrid(this ChannelProviders channelProviders, string? providerId = null)
 		{
 			Guard.AgainstNull(channelProviders);
 			return channelProviders.GetId(SendGridId, providerId);
 		}
 
-		public static IPipelineChannelConfiguration AddSendGridTemplateEmail(this IPipelineChannelConfiguration pipelineChannelConfiguration, IAudienceAddress fromAddress, string templateId, Action<ISendGridEmailChannel> emailChannelConfiguration, params string[]? allowedChannelProviders)
-		{
-			Guard.AgainstNull(templateId);
+		//public static IPipelineChannelConfiguration AddSendGridTemplateEmail(this IPipelineChannelConfiguration pipelineChannelConfiguration, IAudienceAddress fromAddress, string templateId, Action<ISendGridEmailChannel> emailChannelConfiguration, params string[]? allowedChannelProviders)
+		//{
+		//	Guard.AgainstNull(templateId);
 
-			var allowedProviders = new List<string>(allowedChannelProviders ?? []) { Id.ChannelProvider.SendGrid() }.ToArray();
-			var emailOptions = new SendGridEmailChannel(fromAddress, allowedProviders)
-			{
-				TemplateId = templateId
-			};
-			emailChannelConfiguration(emailOptions);
-			pipelineChannelConfiguration.AddChannel(emailOptions);
-			return pipelineChannelConfiguration;
-		}
+		//	var allowedProviders = new List<string>(allowedChannelProviders ?? []) { Id.ChannelProvider.SendGrid() }.ToArray();
+		//	var emailOptions = new SendGridEmailChannel(fromAddress, allowedProviders)
+		//	{
+		//		TemplateId = templateId
+		//	};
+		//	emailChannelConfiguration(emailOptions);
+		//	pipelineChannelConfiguration.AddChannel(emailOptions);
+		//	return pipelineChannelConfiguration;
+		//}
 
-		public static IPipelineChannelConfiguration AddSendGridEmail(this IPipelineChannelConfiguration pipelineChannelConfiguration, IAudienceAddress fromAddress, Action<ISendGridEmailChannel> emailChannelConfiguration, params string[]? allowedChannelProviders)
-		{
-			var allowedProviders = new List<string>(allowedChannelProviders ?? []) { Id.ChannelProvider.SendGrid() }.ToArray();
-			var emailOptions = new SendGridEmailChannel(fromAddress, allowedProviders);
-			emailChannelConfiguration(emailOptions);
-			pipelineChannelConfiguration.AddChannel(emailOptions);
-			return pipelineChannelConfiguration;
-		}
+		//public static IPipelineChannelConfiguration AddSendGridEmail(this IPipelineChannelConfiguration pipelineChannelConfiguration, IAudienceAddress fromAddress, Action<ISendGridEmailChannel> emailChannelConfiguration, params string[]? allowedChannelProviders)
+		//{
+		//	var allowedProviders = new List<string>(allowedChannelProviders ?? []) { Id.ChannelProvider.SendGrid() }.ToArray();
+		//	var emailOptions = new SendGridEmailChannel(fromAddress, allowedProviders);
+		//	emailChannelConfiguration(emailOptions);
+		//	pipelineChannelConfiguration.AddChannel(emailOptions);
+		//	return pipelineChannelConfiguration;
+		//}
 
 		public static CommunicationsClientBuilder AddSendGridSupport(this CommunicationsClientBuilder channelProviderConfiguration, Action<SendGridClientOptions> options, string? providerId = null)
 		{

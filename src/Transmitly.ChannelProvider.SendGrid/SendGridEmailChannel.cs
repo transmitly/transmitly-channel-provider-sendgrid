@@ -41,6 +41,8 @@ namespace Transmitly.SendGrid
 
 		public Type CommunicationType => typeof(SendGridMessage);
 
+		public ExtendedProperties ExtendedProperties => throw new NotImplementedException();
+
 		public async Task<object> GenerateCommunicationAsync(IDispatchCommunicationContext communicationContext)
 		{
 			var subject = await Subject.RenderAsync(communicationContext, false);
