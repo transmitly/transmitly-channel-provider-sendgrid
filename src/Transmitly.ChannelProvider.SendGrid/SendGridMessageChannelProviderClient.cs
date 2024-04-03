@@ -40,7 +40,7 @@ namespace Transmitly.SendGrid
 			var client = new SendGridClient(_apiKey);
 
 			var res = await client.SendEmailAsync(communication, cancellationToken).ConfigureAwait(false);
-			return [new SendGridResult { IsDelivered = res.IsSuccessStatusCode, DispatchStatus = res.IsSuccessStatusCode ? DispatchStatus.Dispatched : DispatchStatus.Error }];
+			return [new SendGridResult { IsDelivered = res.IsSuccessStatusCode, DispatchStatus = res.IsSuccessStatusCode ? DispatchStatus.Dispatched : DispatchStatus.Exception }];
 		}
 	}
 }

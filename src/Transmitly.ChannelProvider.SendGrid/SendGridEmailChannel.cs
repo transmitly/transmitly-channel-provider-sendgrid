@@ -43,13 +43,16 @@ namespace Transmitly.SendGrid
 
 		public ExtendedProperties ExtendedProperties => throw new NotImplementedException();
 
+		public string? DeliveryReportCallbackUrl { get; set; }
+		public Func<IDispatchCommunicationContext, Task<string?>>? DeliveryReportCallbackUrlResolver { get; set; }
+
 		public async Task<object> GenerateCommunicationAsync(IDispatchCommunicationContext communicationContext)
 		{
 			var subject = await Subject.RenderAsync(communicationContext, false);
 			var htmlBody = await HtmlBody.RenderAsync(communicationContext, false);
 			var textBody = await TextBody.RenderAsync(communicationContext, false);
 
-			//todo: attachments
+			//todo: attachments, delivery report callback
 			var to = communicationContext.RecipientAudiences.SelectMany(m => m.Addresses).Select(x => new EmailAddress(x.Value, x.Display)).ToList();
 
 			if (string.IsNullOrEmpty(TemplateId))
