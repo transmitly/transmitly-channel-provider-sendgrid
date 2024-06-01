@@ -22,7 +22,7 @@ using Transmitly.Template.Configuration;
 
 namespace Transmitly.SendGrid
 {
-	internal class SendGridEmailChannel(IAudienceAddress fromAddress, string[]? allowedChannelProviders) : ISendGridEmailChannel
+	internal class SendGridEmailChannel(IIdentityAddress fromAddress, string[]? allowedChannelProviders) : ISendGridEmailChannel
 	{
 		private static readonly Regex Rfc2822Regex = new("(?:(?<name>[^\\<]*)\\<(?<email>.*@.*)\\>|(?<name>)(?<email>[^\\<]*@.*[^\\>]))", RegexOptions.ECMAScript | RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
 		public IContentTemplateConfiguration Subject => new ContentTemplateConfiguration();
@@ -31,7 +31,7 @@ namespace Transmitly.SendGrid
 
 		public IContentTemplateConfiguration TextBody => new ContentTemplateConfiguration();
 
-		public IAudienceAddress FromAddress { get; set; } = Guard.AgainstNull(fromAddress);
+		public IIdentityAddress FromAddress { get; set; } = Guard.AgainstNull(fromAddress);
 
 		public string Id { get; } = Transmitly.Id.Channel.Email(nameof(SendGridMessage));
 
@@ -53,16 +53,16 @@ namespace Transmitly.SendGrid
 			var textBody = await TextBody.RenderAsync(communicationContext, false);
 
 			//todo: attachments, delivery report callback
-			var to = communicationContext.RecipientAudiences.SelectMany(m => m.Addresses).Select(x => new EmailAddress(x.Value, x.Display)).ToList();
+			var to = communicationContext.PlatformIdentities.SelectMany(m => m.Addresses).Select(x => new EmailAddress(x.Value, x.Display)).ToList();
 
 			if (string.IsNullOrEmpty(TemplateId))
 				return MailHelper.CreateSingleEmailToMultipleRecipients(new EmailAddress(FromAddress.Value, FromAddress.Display), to, subject, textBody, htmlBody);
 			return MailHelper.CreateSingleTemplateEmailToMultipleRecipients(new EmailAddress(FromAddress.Value, FromAddress.Display), to, TemplateId, communicationContext.ContentModel?.Model);
 		}
 
-		public bool SupportsAudienceAddress(IAudienceAddress audienceAddress)
-		{
-			return Rfc2822Regex.IsMatch(audienceAddress.Value);
-		}
-	}
+        public bool SupportsIdentityAddress(IIdentityAddress identityAddress)
+        {
+            return Rfc2822Regex.IsMatch(identityAddress.Value);
+        }
+    }
 }
