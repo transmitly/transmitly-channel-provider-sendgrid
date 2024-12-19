@@ -11,23 +11,16 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
+using System.Collections.Generic;
 
-using System;
-
-namespace Transmitly.SendGrid
+namespace Transmitly.ChannelProvider.SendGrid.Configuration
 {
-	internal class SendGridResult : IDispatchResult
-	{
-		public string? ResourceId { get; set; }
-
-		public bool IsDelivered { get; set; }
-
-		public string? ChannelProviderId { get; set; }
-
-		public string? ChannelId { get; set; }
-
-		public DispatchStatus DispatchStatus { get; set; }
-
-		public Exception? Exception { get; set; }
-	}
+    public class SendGridOptions
+    {
+        public string? ApiKey { get; set; }
+        public string Host { get; set; } = "https://api.sendgrid.com";
+        public string Version { get; set; } = "v3";
+        public bool HttpErrorAsException { get; set; }
+        public Dictionary<string, string> RequestHeaders { get; set; } = new();
+    }
 }

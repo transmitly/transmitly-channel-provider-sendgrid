@@ -12,12 +12,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
-using System.Collections.Generic;
-using Transmitly.Pipeline.Configuration;
-using Transmitly.SendGrid;
+using Transmitly.ChannelProvider.SendGrid.Configuration;
+using Transmitly.ChannelProvider.SendGrid.Sdk;
 
 namespace Transmitly
 {
@@ -59,9 +57,9 @@ namespace Transmitly
 		//	return pipelineChannelConfiguration;
 		//}
 
-		public static CommunicationsClientBuilder AddSendGridSupport(this CommunicationsClientBuilder channelProviderConfiguration, Action<SendGridClientOptions> options, string? providerId = null)
+		public static CommunicationsClientBuilder AddSendGridSupport(this CommunicationsClientBuilder channelProviderConfiguration, Action<SendGridOptions> options, string? providerId = null)
 		{
-			var opts = new SendGridClientOptions();
+			var opts = new SendGridOptions();
 			options(opts);
 			channelProviderConfiguration
 				.ChannelProvider

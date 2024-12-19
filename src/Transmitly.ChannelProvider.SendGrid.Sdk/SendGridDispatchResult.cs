@@ -12,10 +12,22 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-namespace Transmitly.SendGrid
+using System;
+
+namespace Transmitly.ChannelProvider.SendGrid.Sdk
 {
-	public interface ISendGridEmailChannel : IEmailChannel
+	internal class SendGridDispatchResult : IDispatchResult
 	{
-		string? TemplateId { get; set; }
+		public string? ResourceId { get; set; }
+
+		public bool IsDelivered { get; set; }
+
+		public string? ChannelProviderId { get; set; }
+
+		public string? ChannelId { get; set; }
+
+		public DispatchStatus DispatchStatus { get; set; }
+
+		public Exception? Exception { get; set; }
 	}
 }

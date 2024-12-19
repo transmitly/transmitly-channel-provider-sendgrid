@@ -20,7 +20,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Transmitly.Template.Configuration;
 
-namespace Transmitly.SendGrid
+namespace Transmitly.ChannelProvider.SendGrid.Sdk
 {
 	internal class SendGridEmailChannel(IIdentityAddress fromAddress, string[]? allowedChannelProviders) : ISendGridEmailChannel
 	{
