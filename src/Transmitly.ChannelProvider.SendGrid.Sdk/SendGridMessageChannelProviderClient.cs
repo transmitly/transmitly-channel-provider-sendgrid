@@ -21,7 +21,7 @@ using Transmitly.ChannelProvider.SendGrid.Configuration;
 
 namespace Transmitly.ChannelProvider.SendGrid.Sdk
 {
-    public sealed class SendGridMessageChannelProviderClient : ChannelProviderClient<SendGridMessage>
+    public sealed class SendGridMessageChannelProviderClient : ChannelProviderDispatcher<SendGridMessage>
     {
         private readonly SendGridOptions _options;
 

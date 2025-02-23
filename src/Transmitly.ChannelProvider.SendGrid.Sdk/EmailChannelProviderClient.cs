@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace Transmitly.ChannelProvider.SendGrid.Sdk
 {
-    public sealed class EmailChannelProviderClient : ChannelProviderClient<IEmail>
+    public sealed class EmailChannelProviderClient : ChannelProviderDispatcher<IEmail>
     {
         private readonly SendGridClientOptions _options;
 

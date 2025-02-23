@@ -64,8 +64,8 @@ namespace Transmitly
 			channelProviderConfiguration
 				.ChannelProvider
 				.Build(Id.ChannelProvider.SendGrid(providerId), opts)
-				.AddClient<SendGridMessageChannelProviderClient, SendGridMessage>(Id.Channel.Email())
-				.AddClient<EmailChannelProviderClient, IEmail>(Id.Channel.Email())
+				.AddDispatcher<SendGridMessageChannelProviderClient, SendGridMessage>(Id.Channel.Email())
+				.AddDispatcher<EmailChannelProviderClient, IEmail>(Id.Channel.Email())
 				.Register();
 			return channelProviderConfiguration;
 		}
