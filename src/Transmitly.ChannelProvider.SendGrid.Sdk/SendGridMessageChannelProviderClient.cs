@@ -21,22 +21,22 @@ using Transmitly.ChannelProvider.SendGrid.Configuration;
 
 namespace Transmitly.ChannelProvider.SendGrid.Sdk
 {
-    public sealed class SendGridMessageChannelProviderClient : ChannelProviderDispatcher<SendGridMessage>
-    {
-        private readonly SendGridOptions _options;
+	public sealed class SendGridMessageChannelProviderClient : ChannelProviderDispatcher<SendGridMessage>
+	{
+		private readonly SendGridOptions _options;
 
-        public SendGridMessageChannelProviderClient(SendGridOptions sendGridClientOptions)
-        {
-            Guard.AgainstNull(sendGridClientOptions);
-            _options = sendGridClientOptions;
-        }
+		public SendGridMessageChannelProviderClient(SendGridOptions sendGridClientOptions)
+		{
+			Guard.AgainstNull(sendGridClientOptions);
+			_options = sendGridClientOptions;
+		}
 
-        public override async Task<IReadOnlyCollection<IDispatchResult?>> DispatchAsync(SendGridMessage communication, IDispatchCommunicationContext communicationContext, CancellationToken cancellationToken)
-        {
-            var client = new SendGridClient(apiKey: _options.ApiKey, host: _options.Host, requestHeaders: _options.RequestHeaders, version: _options.Version);
+		public override async Task<IReadOnlyCollection<IDispatchResult?>> DispatchAsync(SendGridMessage communication, IDispatchCommunicationContext communicationContext, CancellationToken cancellationToken)
+		{
+			var client = new SendGridClient(apiKey: _options.ApiKey, host: _options.Host, requestHeaders: _options.RequestHeaders, version: _options.Version);
 
-            var res = await client.SendEmailAsync(communication, cancellationToken).ConfigureAwait(false);
-            return [new SendGridDispatchResult { IsDelivered = res.IsSuccessStatusCode, DispatchStatus = res.IsSuccessStatusCode ? DispatchStatus.Dispatched : DispatchStatus.Exception }];
-        }
-    }
+			var res = await client.SendEmailAsync(communication, cancellationToken).ConfigureAwait(false);
+			return [new SendGridDispatchResult { IsDelivered = res.IsSuccessStatusCode, DispatchStatus = res.IsSuccessStatusCode ? DispatchStatus.Dispatched : DispatchStatus.Exception }];
+		}
+	}
 }

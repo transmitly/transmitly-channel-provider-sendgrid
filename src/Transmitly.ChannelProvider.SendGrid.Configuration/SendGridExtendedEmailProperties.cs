@@ -13,20 +13,20 @@
 //  limitations under the License.
 namespace Transmitly.ChannelProvider.SendGrid.Configuration
 {
-    public sealed class SendGridExtendedEmailProperties
-    {
-        public SendGridExtendedEmailProperties(IEmailChannel channel)
-        {
-            Guard.AgainstNull(channel);
-            _extendedProperties = Guard.AgainstNull(channel.ExtendedProperties);
-        }
-        private readonly IExtendedProperties _extendedProperties;
-        private const string ProviderKey = "SendGrid";
+	public sealed class SendGridExtendedEmailProperties
+	{
+		public SendGridExtendedEmailProperties(IEmailChannel channel)
+		{
+			Guard.AgainstNull(channel);
+			_extendedProperties = Guard.AgainstNull(channel.ExtendedProperties);
+		}
+		private readonly IExtendedProperties _extendedProperties;
+		private const string ProviderKey = "SendGrid";
 
-        public string? TemplateId
-        {
-            get => _extendedProperties.GetValue<string?>(ProviderKey, nameof(TemplateId));
-            set => _extendedProperties.AddOrUpdate(ProviderKey, nameof(TemplateId), value);
-        }
-    }
+		public string? TemplateId
+		{
+			get => _extendedProperties.GetValue<string?>(ProviderKey, nameof(TemplateId));
+			set => _extendedProperties.AddOrUpdate(ProviderKey, nameof(TemplateId), value);
+		}
+	}
 }

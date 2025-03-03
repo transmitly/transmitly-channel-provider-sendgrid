@@ -21,30 +21,30 @@ using System.Threading.Tasks;
 
 namespace Transmitly.ChannelProvider.SendGrid.Sdk
 {
-    public sealed class EmailChannelProviderClient : ChannelProviderDispatcher<IEmail>
-    {
-        private readonly SendGridClientOptions _options;
+	public sealed class EmailChannelProviderClient : ChannelProviderDispatcher<IEmail>
+	{
+		private readonly SendGridClientOptions _options;
 
-        public EmailChannelProviderClient(SendGridClientOptions sendGridClientOptions)
-        {
-            _options = Guard.AgainstNull(sendGridClientOptions);
-        }
+		public EmailChannelProviderClient(SendGridClientOptions sendGridClientOptions)
+		{
+			_options = Guard.AgainstNull(sendGridClientOptions);
+		}
 
-        public override async Task<IReadOnlyCollection<IDispatchResult?>> DispatchAsync(IEmail communication, IDispatchCommunicationContext communicationContext, CancellationToken cancellationToken)
-        {
-            Guard.AgainstNull(communication);
-            var client = new SendGridClient(apiKey: _options.ApiKey, host: _options.Host, requestHeaders: _options.RequestHeaders, version: _options.Version);
+		public override async Task<IReadOnlyCollection<IDispatchResult?>> DispatchAsync(IEmail communication, IDispatchCommunicationContext communicationContext, CancellationToken cancellationToken)
+		{
+			Guard.AgainstNull(communication);
+			var client = new SendGridClient(apiKey: _options.ApiKey, host: _options.Host, requestHeaders: _options.RequestHeaders, version: _options.Version);
 
-            var email = communication;
-            var msg = MailHelper.CreateSingleEmailToMultipleRecipients(
-                new EmailAddress(communication.From.Value, communication.From.Display),
-                communication.To!.Select(m => new EmailAddress(m.Value, m.Display)).ToList(),
-                email.Subject,
-                email.TextBody,
-                email.HtmlBody);
+			var email = communication;
+			var msg = MailHelper.CreateSingleEmailToMultipleRecipients(
+				new EmailAddress(communication.From.Value, communication.From.Display),
+				communication.To!.Select(m => new EmailAddress(m.Value, m.Display)).ToList(),
+				email.Subject,
+				email.TextBody,
+				email.HtmlBody);
 
-            var res = await client.SendEmailAsync(msg, cancellationToken).ConfigureAwait(false);
-            return [new SendGridDispatchResult { IsDelivered = res.IsSuccessStatusCode, DispatchStatus = res.IsSuccessStatusCode ? DispatchStatus.Dispatched : DispatchStatus.Exception }];
-        }
-    }
+			var res = await client.SendEmailAsync(msg, cancellationToken).ConfigureAwait(false);
+			return [new SendGridDispatchResult { IsDelivered = res.IsSuccessStatusCode, DispatchStatus = res.IsSuccessStatusCode ? DispatchStatus.Dispatched : DispatchStatus.Exception }];
+		}
+	}
 }

@@ -33,7 +33,7 @@ namespace Transmitly.ChannelProvider.SendGrid.Sdk
 			CultureInfo = cultureInfo;
 		}
 		public CultureInfo CultureInfo { get; }
-		
+
 		public Task<string?> GetContentAsync(IDispatchCommunicationContext context)
 		{
 			return Task.FromResult<string?>(_templateId);

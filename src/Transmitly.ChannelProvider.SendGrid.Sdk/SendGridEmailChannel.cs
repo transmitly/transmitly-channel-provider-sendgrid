@@ -60,9 +60,9 @@ namespace Transmitly.ChannelProvider.SendGrid.Sdk
 			return MailHelper.CreateSingleTemplateEmailToMultipleRecipients(new EmailAddress(FromAddress.Value, FromAddress.Display), to, TemplateId, communicationContext.ContentModel?.Model);
 		}
 
-        public bool SupportsIdentityAddress(IIdentityAddress identityAddress)
-        {
-            return Rfc2822Regex.IsMatch(identityAddress.Value);
-        }
-    }
+		public bool SupportsIdentityAddress(IIdentityAddress identityAddress)
+		{
+			return Rfc2822Regex.IsMatch(identityAddress.Value);
+		}
+	}
 }

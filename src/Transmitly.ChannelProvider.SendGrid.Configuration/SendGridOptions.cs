@@ -15,12 +15,12 @@ using System.Collections.Generic;
 
 namespace Transmitly.ChannelProvider.SendGrid.Configuration
 {
-    public class SendGridOptions
-    {
-        public string? ApiKey { get; set; }
-        public string Host { get; set; } = "https://api.sendgrid.com";
-        public string Version { get; set; } = "v3";
-        public bool HttpErrorAsException { get; set; }
-        public Dictionary<string, string> RequestHeaders { get; set; } = new();
-    }
+	public class SendGridOptions
+	{
+		public string? ApiKey { get; set; }
+		public string Host { get; set; } = "https://api.sendgrid.com";
+		public string Version { get; set; } = "v3";
+		public bool HttpErrorAsException { get; set; }
+		public Dictionary<string, string> RequestHeaders { get; set; } = new();
+	}
 }
