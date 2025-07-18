@@ -12,31 +12,25 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using System.Globalization;
-using System.Threading.Tasks;
-using Transmitly.Template.Configuration;
+using System;
+using System.Runtime.Serialization;
 
 namespace Transmitly.ChannelProvider.SendGrid.Sdk
 {
-	internal class SendGridTemplateMessageRegistration : IContentTemplateRegistration
+	///<inheritdoc cref="Exception"/>
+	[Serializable]
+	internal class SendGridSdkDispatcherException : Exception
 	{
-		private readonly string _templateId;
-
-		public SendGridTemplateMessageRegistration(string templateId, CultureInfo cultureInfo)
+		public SendGridSdkDispatcherException(string message) : base(message)
 		{
-			if (string.IsNullOrEmpty(templateId))
-			{
-				throw new System.ArgumentException($"'{nameof(templateId)}' cannot be null or empty.", nameof(templateId));
-			}
-
-			_templateId = templateId;
-			CultureInfo = cultureInfo;
 		}
-		public CultureInfo CultureInfo { get; }
 
-		public Task<string?> GetContentAsync(IDispatchCommunicationContext context)
+		public SendGridSdkDispatcherException(string message, Exception innerException) : base(message, innerException)
 		{
-			return Task.FromResult<string?>(_templateId);
+		}
+
+		protected SendGridSdkDispatcherException(SerializationInfo info, StreamingContext context) : base(info, context)
+		{
 		}
 	}
 }

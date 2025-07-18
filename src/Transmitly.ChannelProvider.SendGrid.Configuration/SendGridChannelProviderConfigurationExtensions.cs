@@ -12,10 +12,23 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-namespace Transmitly.ChannelProvider.SendGrid.Sdk
+using Transmitly.Channel.Configuration;
+
+namespace Transmitly.ChannelProvider.SendGrid.Configuration
 {
-	public interface ISendGridEmailChannel : IEmailChannel
+	/// <summary>
+	///  Extensions for SendGrid specific channel provider configuration.
+	/// </summary>
+	public static class SendGridChannelProviderConfigurationExtensions
 	{
-		string? TemplateId { get; set; }
+		/// <summary>
+		/// SendGrid specific settings for Email channels.
+		/// </summary>
+		/// <param name="email">Email Channel.</param>
+		/// <returns>SendGrid Email properties.</returns>
+		public static IEmailExtendedChannelProperties SendGrid(this IChannel<IEmail> email)
+		{
+			return SendGridChannelProviderExtendedPropertiesBuilderExtensions.Email.Adapt(email);
+		}
 	}
 }
