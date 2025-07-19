@@ -45,4 +45,3 @@
 	  <ProjectReference Include="..\Transmitly.ChannelProvider.SendGrid.Sdk\Transmitly.ChannelProvider.SendGrid.Sdk.csproj" />
 	</ItemGroup>
 </Project>
-

@@ -39,7 +39,7 @@ namespace Transmitly.ChannelProvider.SendGrid.Sdk.Configuration.Email
 		public EmailChannelProviderDispatcher(SendGridOptions sendGridClientOptions)
 		{
 			Guard.AgainstNull(sendGridClientOptions);
-			Guard.AgainstNullOrWhiteSpace(sendGridClientOptions.ApiKey, nameof(SendGridOptions.ApiKey));
+			Guard.AgainstNullOrWhiteSpace(sendGridClientOptions.ApiKey);
 
 			var reliabilitySettings = sendGridClientOptions.ReliabilitySettings;
 			var authSettings = sendGridClientOptions.Auth;

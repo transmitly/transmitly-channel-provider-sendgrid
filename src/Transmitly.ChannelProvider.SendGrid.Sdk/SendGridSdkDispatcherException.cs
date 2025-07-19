@@ -19,17 +19,17 @@ namespace Transmitly.ChannelProvider.SendGrid.Sdk
 {
 	///<inheritdoc cref="Exception"/>
 	[Serializable]
-	internal class SendGridSdkDispatcherException : Exception
+	public sealed class SendGridSdkDispatcherException : Exception
 	{
+		public SendGridSdkDispatcherException()
+		{
+		}
+
 		public SendGridSdkDispatcherException(string message) : base(message)
 		{
 		}
 
 		public SendGridSdkDispatcherException(string message, Exception innerException) : base(message, innerException)
-		{
-		}
-
-		protected SendGridSdkDispatcherException(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 		}
 	}

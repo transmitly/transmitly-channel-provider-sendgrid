@@ -38,4 +38,7 @@
 		<PackageReference Include="SendGrid" Version="9.28.1" />
 		<PackageReference Include="Transmitly" Version="0.1.0-271.a05261c" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Transmitly.ChannelProvider.SendGrid.Configuration\Transmitly.ChannelProvider.SendGrid.Configuration.csproj" />
+	</ItemGroup>
 </Project>
