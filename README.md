@@ -15,11 +15,21 @@ Then add the channel provider using `AddSendGridSupport()`:
 ```csharp
 using Transmitly;
 ...
-var communicationClient = new CommunicationsClientBuilder()
+var communicationClient =
+	new CommunicationsClientBuilder()
 	.AddSendGridSupport(options =>
 	{
 		options.ApiKey = "12354";
 	})
+	.AddPipeline("first-pipeline", options =>
+	{
+		options.AddEmail("from@transmit.ly", email =>
+		{
+			email.Subject.AddStringTemplate("My first pipeline!");
+			email.HtmlBody.AddStringTemplate("My <strong>first</strong> pipeline is great!");
+			email.TextBody.AddStringTemplate("My *first* pipeline is great!");
+		});
+	});
 ```
 * See the [Transmitly](https://github.com/transmitly/transmitly) project for more details on what a channel provider is and how it can be configured.
 

@@ -53,5 +53,24 @@ namespace Transmitly
 
 			return channelProviderConfiguration;
 		}
+
+		public static void Foo()
+		{
+var communicationClient =
+	new CommunicationsClientBuilder()
+	.AddSendGridSupport(options =>
+	{
+		options.ApiKey = "12354";
+	})
+	.AddPipeline("first-pipeline", options =>
+	{
+		options.AddEmail("from@transmit.ly", email =>
+		{
+			email.Subject.AddStringTemplate("My first pipeline!");
+			email.HtmlBody.AddStringTemplate("My <strong>first</strong> pipeline is great!");
+			email.TextBody.AddStringTemplate("My *first* pipeline is great!");
+		});
+	});
+		}
 	}
 }
