@@ -12,21 +12,31 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using SendGrid;
 using System;
+using System.Linq;
 
 namespace Transmitly.ChannelProvider.SendGrid.Sdk
 {
-	internal class SendGridDispatchResult : IDispatchResult
+	/// <inheritdoc cref="IDispatchResult"/>
+	sealed class SendGridDispatchResult() : IDispatchResult
 	{
+		internal SendGridDispatchResult(Response? response) : this()
+		{
+			ResourceId = response?.Headers?.GetValues("X-Message-ID").FirstOrDefault();
+			Status = SendGridCommunciationStatus.GetStatus(response?.IsSuccessStatusCode ?? false);
+		}
 		public string? ResourceId { get; set; }
 
-		public bool IsDelivered { get; set; }
+		public CommunicationsStatus Status { get; set; } = SendGridCommunciationStatus.Unknown;
 
-		public string? ChannelProviderId { get; set; }
+		public string? ChannelProviderId { get; }
 
-		public string? ChannelId { get; set; }
+		public string? ChannelId { get; }
 
-		public DispatchStatus DispatchStatus { get; set; }
+		public string? PipelineId { get; }
+
+		public string? PipelineIntent { get; }
 
 		public Exception? Exception { get; set; }
 	}

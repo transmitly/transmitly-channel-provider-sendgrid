@@ -12,10 +12,25 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using System;
+using System.Runtime.Serialization;
+
 namespace Transmitly.ChannelProvider.SendGrid.Sdk
 {
-	public interface ISendGridEmailChannel : IEmailChannel
+	///<inheritdoc cref="Exception"/>
+	[Serializable]
+	public sealed class SendGridSdkDispatcherException : Exception
 	{
-		string? TemplateId { get; set; }
+		public SendGridSdkDispatcherException()
+		{
+		}
+
+		public SendGridSdkDispatcherException(string message) : base(message)
+		{
+		}
+
+		public SendGridSdkDispatcherException(string message, Exception innerException) : base(message, innerException)
+		{
+		}
 	}
 }
