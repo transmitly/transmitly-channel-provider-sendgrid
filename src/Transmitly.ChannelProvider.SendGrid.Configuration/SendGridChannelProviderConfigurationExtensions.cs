@@ -12,9 +12,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using Transmitly.Channel.Configuration;
+using System;
+using Transmitly.Channel.Configuration.Email;
+using Transmitly.ChannelProvider.SendGrid.Configuration;
+using Transmitly.Delivery;
+using Transmitly.Util;
 
-namespace Transmitly.ChannelProvider.SendGrid.Configuration
+namespace Transmitly
 {
 	/// <summary>
 	///  Extensions for SendGrid specific channel provider configuration.
@@ -22,13 +26,36 @@ namespace Transmitly.ChannelProvider.SendGrid.Configuration
 	public static class SendGridChannelProviderConfigurationExtensions
 	{
 		/// <summary>
+		/// Returns the SendGrid channel provider identifier.
+		/// </summary>
+		/// <param name="channelProviders">Channel providers.</param>
+		/// <param name="providerId">Optional provider identifier.</param>
+		/// <returns>SendGrid channel identifier.</returns>
+		public static string SendGrid(this ChannelProviders channelProviders, string? providerId = null)
+		{
+			Guard.AgainstNull(channelProviders);
+			return channelProviders.GetId(SendGridConstant.Id, providerId);
+		}
+
+		/// <summary>
 		/// SendGrid specific settings for Email channels.
 		/// </summary>
 		/// <param name="email">Email Channel.</param>
 		/// <returns>SendGrid Email properties.</returns>
-		public static IEmailExtendedChannelProperties SendGrid(this IChannel<IEmail> email)
+		public static IEmailExtendedChannelProperties SendGrid(this IEmailChannelConfiguration email)
 		{
+			Guard.AgainstNull(email);
 			return SendGridChannelProviderExtendedPropertiesBuilderExtensions.Email.Adapt(email);
+		}
+
+		/// <summary>
+		/// Infobip specific settings for sms delivery reports.
+		/// </summary>
+		/// <param name="deliveryReport">Delivery Report.</param>
+		/// <returns>Infobip SMS delivery report properties.</returns>
+		public static IDeliveryReportExtendedProperties SendGrid(this DeliveryReport deliveryReport)
+		{
+			return SendGridChannelProviderExtendedPropertiesBuilderExtensions.DeliveryReport.Adapt(deliveryReport);
 		}
 	}
 }

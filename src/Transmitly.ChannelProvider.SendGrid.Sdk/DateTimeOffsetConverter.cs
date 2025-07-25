@@ -13,32 +13,25 @@
 //  limitations under the License.
 
 using System;
-using System.Runtime.Serialization;
+using System.Diagnostics;
+using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Transmitly.ChannelProvider.SendGrid.Sdk
 {
-	///<inheritdoc cref="Exception"/>
-	[Serializable]
-	public class SendGridSdkDispatcherException : Exception
+	//Source = https://stackoverflow.com/a/67857546
+	sealed class DateTimeOffsetConverter : JsonConverter<DateTimeOffset>
 	{
-		public SendGridSdkDispatcherException()
+		public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
+			Debug.Assert(typeToConvert == typeof(DateTimeOffset));
+			return DateTimeOffset.Parse(reader.GetString(), new CultureInfo("en-US"));
 		}
 
-		public SendGridSdkDispatcherException(string message) : base(message)
+		public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
 		{
-		}
-
-		public SendGridSdkDispatcherException(string message, Exception innerException) : base(message, innerException)
-		{
-		}
-
-#if NET8_0_OR_GREATER
-		[Obsolete(DiagnosticId = "SYSLIB0051")] // add this attribute to the serialization ctor
-#endif
-		protected SendGridSdkDispatcherException(SerializationInfo exception, StreamingContext context) : base(exception, context)
-		{
-
+			writer.WriteStringValue(value.ToString());
 		}
 	}
 }

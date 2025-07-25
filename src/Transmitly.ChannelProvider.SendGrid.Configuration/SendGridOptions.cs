@@ -13,6 +13,7 @@
 //  limitations under the License.
 
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Transmitly.ChannelProvider.SendGrid.Configuration
 {
@@ -62,24 +63,52 @@ namespace Transmitly.ChannelProvider.SendGrid.Configuration
 		/// </summary>
 		public string UserAgent => _userAgent;
 
-		private readonly string _userAgent = GetUserAgent();
+		private readonly string _userAgent = BuildUserAgent();
 
-		private static string GetUserAgent()
+		private static string BuildUserAgent()
 		{
-			string? version = null;
-			try
+			// 1) Try informational version
+			var infoVersion = typeof(SendGridOptions)
+				.Assembly
+				.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+				?.InformationalVersion;
+
+			// 2) Try AssemblyVersion
+			var asmVersion = typeof(SendGridOptions).Assembly.GetName().Version?.ToString();
+
+			// 3) Choose raw version
+			string rawVersion;
+			if (!string.IsNullOrWhiteSpace(asmVersion) && asmVersion != "0.0.0.0")
 			{
-				version = typeof(SendGridOptions).Assembly.GetName().Version?.ToString();
+				if (!string.IsNullOrWhiteSpace(infoVersion))
+				{
+					rawVersion = infoVersion;
+				}
+				else
+				{
+					rawVersion = asmVersion;
+				}
 			}
-			catch
+			else
 			{
-				//eat error
+				if (!string.IsNullOrWhiteSpace(infoVersion))
+				{
+					rawVersion = infoVersion;
+				}
+				else
+				{
+					rawVersion = (SendGridConstant.DefaultVersion);
+				}
 			}
 
-			if (string.IsNullOrWhiteSpace(version))
-				version = "0.1.0";
+			// 4) Strip off any "+buildmetadata"
+			var cleanVersion = rawVersion.Split('+')[0];
 
-			return $"transmitly-sendgrid/{version}";
+			// 5) Truncate if still too long
+			if (cleanVersion.Length > 20)
+				cleanVersion = cleanVersion.Substring(0, 20);
+
+			return $"transmitly-sendgrid/{cleanVersion}";
 		}
 	}
 }

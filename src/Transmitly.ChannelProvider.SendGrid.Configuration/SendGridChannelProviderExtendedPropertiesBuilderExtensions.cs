@@ -24,11 +24,10 @@ namespace Transmitly.ChannelProvider.SendGrid.Configuration
 	public static class SendGridChannelProviderExtendedPropertiesBuilderExtensions
 	{
 		private static Type? _emailAdaptorType;
-
-		/// <summary>
-		/// Gets the email extended channel properties adaptor.
-		/// </summary>
 		internal static IEmailExtendedChannelProperties Email => Create<IEmailExtendedChannelProperties>(Guard.AgainstNull(_emailAdaptorType));
+
+		private static Type? _deliveryReportAdaptorType;
+		internal static IDeliveryReportExtendedProperties DeliveryReport => Create<IDeliveryReportExtendedProperties>(Guard.AgainstNull(_deliveryReportAdaptorType));
 
 		/// <summary>
 		/// Creates an instance of the specified type.
@@ -51,6 +50,13 @@ namespace Transmitly.ChannelProvider.SendGrid.Configuration
 			where T : class, IEmailExtendedChannelProperties, new()
 		{
 			_emailAdaptorType = typeof(T);
+			return builder;
+		}
+
+		public static ChannelProviderRegistrationBuilder AddDeliveryReportExtendedProprtiesAdaptor<T>(this ChannelProviderRegistrationBuilder builder)
+		where T : class, IDeliveryReportExtendedProperties, new()
+		{
+			_deliveryReportAdaptorType = typeof(T);
 			return builder;
 		}
 

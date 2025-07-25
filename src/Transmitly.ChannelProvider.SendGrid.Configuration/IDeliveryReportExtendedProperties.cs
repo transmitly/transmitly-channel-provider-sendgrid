@@ -11,12 +11,15 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
-namespace Transmitly.ChannelProvider.SendGrid.Configuration
+
+using Transmitly.Delivery;
+
+namespace Transmitly
 {
-	public static class SendGridConstant
+	public interface IDeliveryReportExtendedProperties
 	{
-		public const string Id = "SendGrid";
-		public const string EmailPropertiesKey = $"{Id}.Email";
-		internal const string DefaultVersion = "0.2.0";
+		IDeliveryReportExtendedProperties Adapt(DeliveryReport report);
+
+		IEmailExtendedDeliveryReportProperties Email { get; }
 	}
 }

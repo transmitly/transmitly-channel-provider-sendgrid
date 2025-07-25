@@ -14,25 +14,12 @@
 
 using System;
 using Transmitly.ChannelProvider.SendGrid.Configuration;
-using Transmitly.ChannelProvider.SendGrid.Sdk.Configuration.Email;
-using Transmitly.Util;
+using Transmitly.ChannelProvider.SendGrid.Sdk.Email;
 
 namespace Transmitly
 {
 	public static class SendGridChannelProviderExtensions
 	{
-		/// <summary>
-		/// Returns the SendGrid channel provider identifier.
-		/// </summary>
-		/// <param name="channelProviders">Channel providers.</param>
-		/// <param name="providerId">Optional provider identifier.</param>
-		/// <returns>SendGrid channel identifier.</returns>
-		public static string SendGrid(this ChannelProviders channelProviders, string? providerId = null)
-		{
-			Guard.AgainstNull(channelProviders);
-			return channelProviders.GetId(SendGridConstant.Id, providerId);
-		}
-
 		/// <summary>
 		/// Adds SendGrid support to the channel provider configuration.
 		/// </summary>
@@ -49,28 +36,10 @@ namespace Transmitly
 				.Build(Id.ChannelProvider.SendGrid(providerId), opts)
 				.AddDispatcher<EmailChannelProviderDispatcher, IEmail>(Id.Channel.Email())
 				.AddEmailExtendedPropertiesAdaptor<ExtendedEmailChannelProperties>()
+				.AddDeliveryReportRequestAdaptor<SendGridChannelProviderDeliveryReportRequestAdaptor>()
 				.Register();
 
 			return channelProviderConfiguration;
-		}
-
-		public static void Foo()
-		{
-var communicationClient =
-	new CommunicationsClientBuilder()
-	.AddSendGridSupport(options =>
-	{
-		options.ApiKey = "12354";
-	})
-	.AddPipeline("first-pipeline", options =>
-	{
-		options.AddEmail("from@transmit.ly", email =>
-		{
-			email.Subject.AddStringTemplate("My first pipeline!");
-			email.HtmlBody.AddStringTemplate("My <strong>first</strong> pipeline is great!");
-			email.TextBody.AddStringTemplate("My *first* pipeline is great!");
-		});
-	});
 		}
 	}
 }

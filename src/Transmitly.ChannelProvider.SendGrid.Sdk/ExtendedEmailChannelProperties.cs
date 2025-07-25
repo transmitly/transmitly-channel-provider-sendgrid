@@ -12,11 +12,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using Transmitly.Channel.Configuration;
+using Transmitly.Channel.Configuration.Email;
 using Transmitly.ChannelProvider.SendGrid.Configuration;
 using Transmitly.Util;
 
-namespace Transmitly.ChannelProvider.SendGrid.Sdk.Configuration.Email
+namespace Transmitly.ChannelProvider.SendGrid.Sdk.Email
 {
 	/// <inheritdoc cref="IEmailExtendedChannelProperties"/>
 	public sealed class ExtendedEmailChannelProperties : IEmailExtendedChannelProperties
@@ -35,23 +35,11 @@ namespace Transmitly.ChannelProvider.SendGrid.Sdk.Configuration.Email
 			_extendedProperties = properties;
 		}
 
-		private ExtendedEmailChannelProperties(IChannel<IEmail> emailChannel)
+		internal ExtendedEmailChannelProperties(IEmailChannelConfiguration emailChannel)
 		{
 			Guard.AgainstNull(emailChannel);
 			_extendedProperties = Guard.AgainstNull(emailChannel.ExtendedProperties);
 
-		}
-
-		public string? MessageId
-		{
-			get
-			{
-				return _extendedProperties?.GetValue<string>(ProviderKey, nameof(MessageId));
-			}
-			set
-			{
-				_extendedProperties?.AddOrUpdate(ProviderKey, nameof(MessageId), value);
-			}
 		}
 
 		public string? TemplateId
@@ -66,7 +54,7 @@ namespace Transmitly.ChannelProvider.SendGrid.Sdk.Configuration.Email
 			}
 		}
 
-		public IEmailExtendedChannelProperties Adapt(IChannel<IEmail> email)
+		public IEmailExtendedChannelProperties Adapt(IEmailChannelConfiguration email)
 		{
 			return new ExtendedEmailChannelProperties(email);
 		}

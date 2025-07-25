@@ -11,12 +11,22 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
-namespace Transmitly.ChannelProvider.SendGrid.Configuration
+
+using Transmitly.ChannelProvider.SendGrid.Configuration;
+
+namespace Transmitly.ChannelProvider.SendGrid.Sdk.Email
 {
-	public static class SendGridConstant
+	internal static class Util
 	{
-		public const string Id = "SendGrid";
-		public const string EmailPropertiesKey = $"{Id}.Email";
-		internal const string DefaultVersion = "0.2.0";
+		public static CommunicationsStatus ToDispatchStatus(string? eventName)
+		{
+			var subStatus = (eventName?.ToUpperInvariant()) switch
+			{
+				"DELIVERED" => 2,
+				"DEFERRED" or "PROCESSED" => 1,
+				_ => 0
+			};
+			return CommunicationsStatus.Success(SendGridConstant.Id, eventName ?? "Unknown", subStatus);
+		}
 	}
 }

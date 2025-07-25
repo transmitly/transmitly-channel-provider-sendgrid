@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 using Transmitly.ChannelProvider.SendGrid.Configuration;
 using Transmitly.Util;
 
-namespace Transmitly.ChannelProvider.SendGrid.Sdk.Configuration.Email
+namespace Transmitly.ChannelProvider.SendGrid.Sdk.Email
 {
 	/// <summary>
 	/// Dispatches email communications using the SendGrid SDK.
@@ -80,7 +80,6 @@ namespace Transmitly.ChannelProvider.SendGrid.Sdk.Configuration.Email
 
 			if (emailProprties.TemplateId is not null)
 			{
-				// Set the template ID if provided
 				msg = MailHelper.CreateSingleTemplateEmailToMultipleRecipients(from,
 					tos,
 					emailProprties.TemplateId,
@@ -103,9 +102,18 @@ namespace Transmitly.ChannelProvider.SendGrid.Sdk.Configuration.Email
 				throw new SendGridSdkDispatcherException("Unable to create a message to dispatch");
 			}
 
+			Dispatch(communicationContext, email);
+
 			var sendResponse = await client.SendEmailAsync(msg, cancellationToken).ConfigureAwait(false);
 
-			return [new SendGridDispatchResult(sendResponse)];
+			var results = await sendResponse.ToDispatchResultsAsync(cancellationToken);
+
+			if (sendResponse?.IsSuccessStatusCode ?? false)
+				Dispatched(communicationContext, email, results);
+			else
+				Error(communicationContext, email, results);
+
+			return results;
 		}
 
 		protected override void ConfigureHttpClient(HttpClient httpClient)

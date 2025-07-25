@@ -12,23 +12,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using SendGrid;
 using System;
-using System.Linq;
+using Transmitly.ChannelProvider.SendGrid.Configuration;
 
 namespace Transmitly.ChannelProvider.SendGrid.Sdk
 {
 	/// <inheritdoc cref="IDispatchResult"/>
 	sealed class SendGridDispatchResult() : IDispatchResult
 	{
-		internal SendGridDispatchResult(Response? response) : this()
-		{
-			ResourceId = response?.Headers?.GetValues("X-Message-ID").FirstOrDefault();
-			Status = SendGridCommunciationStatus.GetStatus(response?.IsSuccessStatusCode ?? false);
-		}
-		public string? ResourceId { get; set; }
+		public string? ResourceId { get; internal set; }
 
-		public CommunicationsStatus Status { get; set; } = SendGridCommunciationStatus.Unknown;
+		public CommunicationsStatus Status { get; internal set; } = CommunicationsStatus.ClientError(SendGridConstant.Id, "Unknown");
 
 		public string? ChannelProviderId { get; }
 
@@ -38,6 +32,6 @@ namespace Transmitly.ChannelProvider.SendGrid.Sdk
 
 		public string? PipelineIntent { get; }
 
-		public Exception? Exception { get; set; }
+		public Exception? Exception { get; internal set; }
 	}
 }

@@ -12,7 +12,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using Transmitly.Channel.Configuration;
+using Transmitly.Channel.Configuration.Email;
 
 namespace Transmitly.ChannelProvider.SendGrid.Configuration
 {
@@ -26,14 +26,10 @@ namespace Transmitly.ChannelProvider.SendGrid.Configuration
 		/// </summary>
 		/// <param name="email">Channel to adapt.</param>
 		/// <returns>Extended email proprties.</returns>
-		IEmailExtendedChannelProperties Adapt(IChannel<IEmail> email);
+		IEmailExtendedChannelProperties Adapt(IEmailChannelConfiguration email);
 		/// <summary>
 		/// Gets or sets the SendGrid message ID for the email.
 		/// </summary>
 		public string? TemplateId { get; set; }
-		/// <summary>
-		/// Gets or sets the SendGrid template ID for the email.
-		/// </summary>
-		public string? MessageId { get; set; }
 	}
 }
