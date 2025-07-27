@@ -24,16 +24,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/transmitly/transmitly-channel-provider-sendgrid.git</RepositoryUrl>
 		<PackageTags>email;sendgrid;channel provider; transmitly</PackageTags>
-
-		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeProjectReferencesWithPrivateAssetsAttributeInPackage</TargetsForTfmSpecificBuildOutput>
-		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeReferenceAssemblies</TargetsForTfmSpecificContentInPackage>
-		<BuildProjectReferences Condition="'$(NoBuild)' == 'true'">false</BuildProjectReferences>
-		<!-- Removed the .xml from DefaultAllowedOutputExtensionsInPackageBuildOutputFolder -->
-		<DefaultAllowedOutputExtensionsInPackageBuildOutputFolder>.dll; .exe; .winmd; .json; .pri</DefaultAllowedOutputExtensionsInPackageBuildOutputFolder>
-
-		<!-- Generate documentation file -->
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<!-- Generate symbols package -->
 		<IncludeSymbols>true</IncludeSymbols>
 	</PropertyGroup>
 
@@ -51,44 +42,11 @@
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 		<PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="All" />
 		<PackageReference Include="Transmitly" Version="0.2.1" />
+		<PackageReference Include="Transmitly" Version="0.2.1" />
+		<PackageReference Include="Transmitly.ChannelProvider.SendGrid.Configuration" Version="0.2.2-3.ac21f49 " />
+		<PackageReference Include="Transmitly.ChannelProvider.SendGrid.Sdk" Version="0.2.2-3.ac21f49 " />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
 		<Reference Include="System.Net.Http" />
 	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\Transmitly.ChannelProvider.SendGrid.Configuration\Transmitly.ChannelProvider.SendGrid.Configuration.csproj" PrivateAssets="all" />
-	  <ProjectReference Include="..\Transmitly.ChannelProvider.SendGrid.Sdk\Transmitly.ChannelProvider.SendGrid.Sdk.csproj" PrivateAssets="all"/>
-	</ItemGroup>
-	<!-- Add ProjectReferences output which are flagged as PrivateAssets="all" into the package. -->
-	<Target Name="IncludeProjectReferencesWithPrivateAssetsAttributeInPackage"
-			Condition="'@(ProjectReference)' != '' and @(ProjectReference->AnyHaveMetadataValue('PrivateAssets', 'all'))"
-			DependsOnTargets="BuildOnlySettings;ResolveReferences">
-		<ItemGroup>
-			<_projectReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'all'))" />
-
-			<BuildOutputInPackage Include="@(_projectReferenceCopyLocalPaths)"
-								  TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)" />
-			<TfmSpecificDebugSymbolsFile Include="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.pdb'))"
-										 TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)"
-										 TargetFramework="$(TargetFramework)"
-										 Condition="'$(IncludeSymbols)' == 'true'" />
-
-			<!-- Remove symbol from the non symbol package. -->
-			<BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.pdb'))" />
-			<BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.xml'))" />
-		</ItemGroup>
-	</Target>
-
-	<!-- Add a ref folder to the package which only exposes the library (and its documentation file) so that the
-       referenced class library doesn't get exposed. -->
-	<Target Name="IncludeReferenceAssemblies" AfterTargets="Build">
-		<ItemGroup>
-			<TfmSpecificPackageFile Include="$(OutputPath)$(TargetFramework)\$(AssemblyName).dll"
-									 PackagePath="ref/$(TargetFramework)"
-									 Condition="Exists('$(OutputPath)$(TargetFramework)\$(AssemblyName).dll')" />
-			<TfmSpecificPackageFile Include="$(OutputPath)$(TargetFramework)\$(AssemblyName).xml"
-									 PackagePath="ref/$(TargetFramework)"
-									 Condition="'$(GenerateDocumentationFile)' == 'true' and Exists('$(OutputPath)$(TargetFramework)\$(AssemblyName).xml')" />
-		</ItemGroup>
-	</Target>
 </Project>
