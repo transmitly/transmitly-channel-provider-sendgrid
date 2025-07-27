@@ -9,10 +9,9 @@ on:
       - "src/**"
 jobs:
   build_test_deploy_channel_provider:
-    uses: transmitly/transmitly/.github/workflows/build-and-deploy-channel-provider-group.yml@test/dynamic-versioning-build
+    uses: transmitly/transmitly/.github/workflows/build-and-deploy-channel-provider.yml@main
     with: 
       channelProviderName: Transmitly.ChannelProvider.SendGrid
-      channelProviderTypeName: Sdk
     secrets: inherit
 
       
