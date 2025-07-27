@@ -42,9 +42,8 @@
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 		<PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="All" />
 		<PackageReference Include="Transmitly" Version="0.2.1" />
-		<PackageReference Include="Transmitly" Version="0.2.1" />
-		<PackageReference Include="Transmitly.ChannelProvider.SendGrid.Configuration" Version="0.2.2-3.ac21f49 " />
-		<PackageReference Include="Transmitly.ChannelProvider.SendGrid.Sdk" Version="0.2.2-3.ac21f49 " />
+		<PackageReference Include="Transmitly.ChannelProvider.SendGrid.Configuration" Version="0.2.2" />
+		<PackageReference Include="Transmitly.ChannelProvider.SendGrid.Sdk" Version="0.2.2" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
 		<Reference Include="System.Net.Http" />
