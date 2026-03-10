@@ -1,114 +1,95 @@
-# Transmitly.ChannelProvider.SendGrid
+﻿# Transmitly.ChannelProvider.SendGrid
 
-A [Transmitly](https://github.com/transmitly/transmitly) channel provider that enables sending Email communications with [SendGrid](https://sendgrid.com)
+`Transmitly.ChannelProvider.SendGrid` is the convenience package for sending email with [Transmitly](https://github.com/transmitly/transmitly) through [Twilio SendGrid](https://sendgrid.com/).
 
-### Getting started
+This is the package most applications should install. It wires together:
 
-To use the SendGrid channel provider, first install the [NuGet package](https://nuget.org/packages/transmitly.channel-provider.sendgrid):
+- `Transmitly.ChannelProvider.SendGrid.Configuration`
+- `Transmitly.ChannelProvider.SendGrid.Sdk`
+
+Supported channels:
+
+- `Email`
+
+## Install
 
 ```shell
 dotnet add package Transmitly.ChannelProvider.SendGrid
 ```
 
-Then add the channel provider using `AddSendGridSupport()`:
+## Quick Start
 
 ```csharp
 using Transmitly;
-...
-var communicationClient =
-	new CommunicationsClientBuilder()
+
+ICommunicationsClient client = new CommunicationsClientBuilder()
 	.AddSendGridSupport(options =>
 	{
-		options.ApiKey = "12354";
+		options.ApiKey = "your-sendgrid-api-key";
 	})
-	.AddPipeline("first-pipeline", options =>
+	.AddPipeline("welcome-email", pipeline =>
 	{
-		options.AddEmail("from@transmit.ly", email =>
+		pipeline.AddEmail("welcome@example.com".AsIdentityAddress("Example App"), email =>
 		{
-			email.Subject.AddStringTemplate("My first pipeline!");
-			email.HtmlBody.AddStringTemplate("My <strong>first</strong> pipeline is great!");
-			email.TextBody.AddStringTemplate("My *first* pipeline is great!");
+			email.Subject.AddStringTemplate("Welcome to Example App");
+			email.HtmlBody.AddStringTemplate("<strong>Welcome</strong> to Example App.");
+			email.TextBody.AddStringTemplate("Welcome to Example App.");
 		});
-	});
-```
-* See the [Transmitly](https://github.com/transmitly/transmitly) project for more details on what a channel provider is and how it can be configured.
+	})
+	.BuildClient();
 
-### Using Templates
+var result = await client.DispatchAsync(
+	"welcome-email",
+	"customer@example.com".AsIdentityAddress("Customer"),
+	new { });
+```
+
+## Configuration
+
+`AddSendGridSupport(options => ...)` accepts `SendGridOptions`.
+
+Common settings:
+
+- `ApiKey`: your Twilio SendGrid API key.
+- `Host`: defaults to `https://api.sendgrid.com`.
+- `Version`: defaults to `v3`.
+- `HttpErrorAsException`: forward HTTP failures as exceptions from the underlying client.
+- `RequestHeaders`, `UrlPath`, `Auth`, and `ReliabilitySettings` for advanced client configuration.
+
+## SendGrid-Specific Email Features
+
+This package registers SendGrid email extensions through `email.SendGrid()`.
+
+The primary provider-specific setting is `TemplateId`, which lets you send with a SendGrid dynamic template instead of the channel subject/body content.
 
 ```csharp
 using Transmitly;
-...
-var communicationClient =
-	new CommunicationsClientBuilder()
-	.AddSendGridSupport(options =>
-	{
-		options.ApiKey = "12354";
-	})
-	.AddPipeline("first-pipeline", options =>
-	{
-		options.AddEmail("from@transmit.ly", email =>
-		{
-			//It's recommended to define 'backup' templates to keep
-			//you prepared for using a different channel provider
-			email.Subject.AddStringTemplate("My first pipeline!");
-			email.HtmlBody.AddStringTemplate("My <strong>first</strong> pipeline is great!");
-			email.TextBody.AddStringTemplate("My *first* pipeline is great!");
 
-			email.SendGrid().TemplateId = "d-36ed2a324e76475f9c68462505899384";
-		});
-	});
-```
-
-
-### Delivery Reports
-
-SendGrid only allows one webhook per account and it's unable to be specified dynamically on a per communication basis. By using the [MS MVC Core](https://github.com/transmitly/transmitly-microsoft-aspnetcore-mvc) package we can take advantage of Transmitly's provider agnostic approach for handling delivery updates from the supported channel providers.
-#### Setup
-* SendGrid Dashboard
-* Settings
-* Mail Settings
-* Webhook Settings
-* Event Webhooks
-* Create a new webhook
-* Post Url: https://my.domain.com/Communications/channel/provider/update?tlyc=Email&tlycp=SendGrid
-  * The path will depend upon your app. In this example, we're using the path to the [Kitchen sink sample controller](https://github.com/transmitly/transmitly/tree/main/samples/Transmitly.KitchenSink.AspNetCoreWebApi). The important bits are the `?tlyc=Email&tlycp=SendGrid` to help out Transmitly.
-
-* Your App
-* ```bash
-  dotnet add package Transmitly.Microsoft.AspnetCore.Mvc
-  ```
-
-* Register
-
-```csharp
-  builder.Services
-	.AddControllers(options =>
-	{
-		//Adds the necessary model binders to handle channel provider specific webhooks (Twilio, Infobip, etc)
-		//and convert them to delivery reports (Added with package: Transmitly.Microsoft.AspnetCore.Mvc)
-		options.AddTransmitlyDeliveryReportModelBinders();
-	})
-  	.AddTransmitly(tly=>
-	{
-		tly..AddDeliveryReportHandler((report) =>
-		{
-			logger?.LogInformation("[{channelId}:{channelProviderId}:StatusChanged] Id={id}; Status={status}", report.ChannelId, report.ChannelProviderId, report.ResourceId, report.Status.Type);
-			return Task.CompletedTask;
-		}, [DeliveryReport.Event.StatusChanged()])
-  	   	//...rest of config
-  	});
-  ```
-  * Add a new controller route to handle the SendGrid webhooks
-```csharp
-[HttpPost("channel/provider/update", Name = "DeliveryReport")]
-public IActionResult ChannelProviderDeliveryReport(ChannelProviderDeliveryReportRequest providerReport)
+pipeline.AddEmail("welcome@example.com".AsIdentityAddress("Example App"), email =>
 {
-	_communicationsClient.DispatchAsync(providerReport.DeliveryReports);
-	return Ok();
-}
- ```
+	email.Subject.AddStringTemplate("Welcome to Example App");
+	email.TextBody.AddStringTemplate("Welcome to Example App.");
+	email.SendGrid().TemplateId = "d-0123456789abcdef0123456789abcdef";
+});
+```
 
+## Delivery Reports
+
+This package registers a SendGrid webhook adaptor that converts SendGrid event webhook payloads into Transmitly `DeliveryReport` instances.
+
+Because SendGrid uses a static webhook URL per account, the Transmitly request adaptor expects the callback URL to identify the channel and provider. A common pattern is to use a URL such as:
+
+```text
+https://your-app.example.com/communications/channel/provider/update?tlyc=Email&tlycp=SendGrid
+```
+
+If you are using the MVC integration packages, point the webhook at your Transmitly delivery-report endpoint and include the same query-string context.
+
+## Related Packages
+
+- [Transmitly](https://github.com/transmitly/transmitly)
+- [Transmitly.ChannelProvider.SendGrid.Configuration](https://github.com/transmitly/transmitly-channel-provider-sendgrid-configuration)
+- [Transmitly.ChannelProvider.SendGrid.Sdk](https://github.com/transmitly/transmitly-channel-provider-sendgrid-sdk)
 
 ---
-_Copyright © Code Impressions, LLC.  This open-source project is sponsored and maintained by Code Impressions
-and is licensed under the [Apache License, Version 2.0](http://apache.org/licenses/LICENSE-2.0.html)._
+_Copyright (c) Code Impressions, LLC. This open-source project is sponsored and maintained by Code Impressions and is licensed under the [Apache License, Version 2.0](http://apache.org/licenses/LICENSE-2.0.html)._
