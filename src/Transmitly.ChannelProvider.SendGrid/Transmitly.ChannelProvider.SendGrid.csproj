@@ -39,11 +39,11 @@
 	  </None>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.201" PrivateAssets="All" />
 		<PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="All" />
-		<PackageReference Include="Transmitly" Version="0.2.3-6.30853e7" />
-		<PackageReference Include="Transmitly.ChannelProvider.SendGrid.Configuration" Version="0.2.4-11.9ca2bae" />
-		<PackageReference Include="Transmitly.ChannelProvider.SendGrid.Sdk" Version="0.2.4-11.7130be4" />
+		<PackageReference Include="Transmitly" Version="0.3.0" />
+		<PackageReference Include="Transmitly.ChannelProvider.SendGrid.Configuration" Version="0.3.0" />
+		<PackageReference Include="Transmitly.ChannelProvider.SendGrid.Sdk" Version="0.3.0" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
 		<Reference Include="System.Net.Http" />
