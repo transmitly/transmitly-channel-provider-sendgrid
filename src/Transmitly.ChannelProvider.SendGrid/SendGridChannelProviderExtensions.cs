@@ -15,6 +15,7 @@
 using System;
 using Transmitly.ChannelProvider.SendGrid.Configuration;
 using Transmitly.ChannelProvider.SendGrid.Sdk.Email;
+using Transmitly.Exceptions;
 
 namespace Transmitly
 {
@@ -27,10 +28,13 @@ namespace Transmitly
 		/// <param name="options">Configuration options for the SendGrid dispatcher.</param>
 		/// <param name="providerId">Optional provider identifier.</param>
 		/// <returns><paramref name="channelProviderConfiguration"/></returns>
+		/// <exception cref="CommunicationsException">Signature validation is on but no <see cref="SendGridOptions.EventWebhookVerificationKey"/> is set.</exception>
 		public static CommunicationsClientBuilder AddSendGridSupport(this CommunicationsClientBuilder channelProviderConfiguration, Action<SendGridOptions> options, string? providerId = null)
 		{
 			var opts = new SendGridOptions();
 			options(opts);
+			if (opts.ValidateDeliveryReportSignature && string.IsNullOrWhiteSpace(opts.EventWebhookVerificationKey))
+				throw new CommunicationsException($"SendGrid {nameof(SendGridOptions.EventWebhookVerificationKey)} is required when {nameof(SendGridOptions.ValidateDeliveryReportSignature)} is true. Set it to your Signed Event Webhook verification key, or set {nameof(SendGridOptions.ValidateDeliveryReportSignature)} = false if you don't receive SendGrid event webhooks.");
 			channelProviderConfiguration
 				.ChannelProvider
 				.Build(Id.ChannelProvider.SendGrid(providerId), opts)

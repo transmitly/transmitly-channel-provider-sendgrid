@@ -26,6 +26,8 @@ ICommunicationsClient client = new CommunicationsClientBuilder()
 	.AddSendGridSupport(options =>
 	{
 		options.ApiKey = "your-sendgrid-api-key";
+		// Required unless ValidateDeliveryReportSignature = false. See Delivery Reports.
+		options.EventWebhookVerificationKey = "your-event-webhook-verification-key";
 	})
 	.AddPipeline("welcome-email", pipeline =>
 	{
@@ -84,6 +86,11 @@ https://your-app.example.com/communications/channel/provider/update?tlyc=Email&t
 ```
 
 If you are using the MVC integration packages, point the webhook at your Transmitly delivery-report endpoint and include the same query-string context.
+
+Event webhooks are checked against SendGrid's Signed Event Webhook headers. Turn on **Signed Event Webhook** in SendGrid (Settings → Mail Settings → Event Webhook) and copy the verification key. Requests that fail the check are rejected with `403 Forbidden` by the MVC integration packages.
+
+- `EventWebhookVerificationKey`: the verification key. `AddSendGridSupport` throws at startup if it is missing while `ValidateDeliveryReportSignature` is `true`.
+- `ValidateDeliveryReportSignature`: defaults to `true`. Set it to `false` if you don't receive SendGrid event webhooks; then no key is needed.
 
 ## Related Packages
 
