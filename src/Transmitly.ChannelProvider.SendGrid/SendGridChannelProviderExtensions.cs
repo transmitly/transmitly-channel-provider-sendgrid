@@ -39,7 +39,6 @@ namespace Transmitly
 				.ChannelProvider
 				.Build(Id.ChannelProvider.SendGrid(providerId), opts)
 				.AddDispatcher<EmailChannelProviderDispatcher, IEmail>(Id.Channel.Email())
-				.AddEmailExtendedPropertiesAdaptor<ExtendedEmailChannelProperties>()
 				.AddDeliveryReportRequestAdaptor<SendGridChannelProviderDeliveryReportRequestAdaptor>()
 				.Register();
 
