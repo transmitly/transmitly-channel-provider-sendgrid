@@ -79,11 +79,14 @@ pipeline.AddEmail("welcome@example.com".AsIdentityAddress("Example App"), email 
 
 This package registers a SendGrid webhook adaptor that converts SendGrid event webhook payloads into Transmitly `DeliveryReport` instances.
 
-Because SendGrid uses a static webhook URL per account, the Transmitly request adaptor expects the callback URL to identify the channel and provider. A common pattern is to use a URL such as:
+SendGrid posts every event to one static webhook URL per account and can't add Transmitly's per-message context to it. So the URL itself has to identify the channel and provider with `tlyc=Email` and `tlycp=SendGrid`. Without them the adaptor ignores the request:
 
 ```text
 https://your-app.example.com/communications/channel/provider/update?tlyc=Email&tlycp=SendGrid
 ```
+
+- `tlycp=SendGrid` matches every SendGrid registration, including ones added with a `providerId`.
+- Because the URL is the same for every message, reports don't carry a pipeline intent or pipeline id. To match a report to the message you sent, compare resource ids. The dispatch result's resource id is SendGrid's `X-Message-ID`. The report's resource id is the event's `sg_message_id`, which starts with that `X-Message-ID`, followed by `.` and a suffix SendGrid adds.
 
 If you are using the MVC integration packages, point the webhook at your Transmitly delivery-report endpoint and include the same query-string context.
 
